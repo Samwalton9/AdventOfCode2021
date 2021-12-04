@@ -51,4 +51,38 @@ def part_one():
                 return print(sum_unmarked*int(bingo_num))
 
 
-part_one()
+def part_two():
+    bingo_boards = get_boards(input_lines)
+    num_boards = len(bingo_boards)
+    size = 5
+
+    boolean_boards = [[[False, False, False, False, False] for _ in range(size)] for _ in range(num_boards)]
+    finished_boards = [False for _ in range(num_boards)]
+
+    for k, bingo_num in enumerate(bingo_numbers):
+        for i, board in enumerate(bingo_boards):
+            victory = False
+            this_boolean_board = boolean_boards[i]
+            for x in range(size):
+                for y in range(size):
+                    if board[x][y] == bingo_num:
+                        this_boolean_board[x][y] = True
+
+            # Check victory
+            for row in this_boolean_board:
+                if all(row):
+                    victory = True
+
+            for column in range(size):
+                if all([this_boolean_board[x][column] for x in range(size)]):
+                    victory = True
+
+            if victory:
+                finished_boards[i] = True
+                if all(finished_boards):
+                    unmarked_numbers = [board[a][b] for a in range(size) for b in range(size) if not this_boolean_board[a][b]]
+                    sum_unmarked = sum(map(int, unmarked_numbers))
+                    return print(sum_unmarked*int(bingo_num))
+
+
+part_two()
